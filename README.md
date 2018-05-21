@@ -1,5 +1,5 @@
-UrsaDB2 Client
-==============
+UrsaDB Client
+=============
 
 A command line client for `ursadb`. Usage:
 
@@ -13,7 +13,13 @@ or specify host/port explicitly:
 python ursaclient.py tcp://localhost:9281
 ```
 
-Usage
------
+Full package installation
+-------------------------
 
-Query language is described in `ursadb2` repository.
+This repository is only for UrsaDB project (n-gram database). In order to see instructions on how to set up the whole mquery system, see [CERT-Polska/ursadb](https://github.com/CERT-Polska/mquery).
+
+
+Querying database
+-----------------
+
+Query language is described in [CERT-Polska/ursadb](https://github.com/CERT-Polska/ursadb) repository.
