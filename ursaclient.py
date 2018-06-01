@@ -78,7 +78,7 @@ def main():
         if 'error' in res:
             print '{}ERR {}{}'.format(ANSI['RED'], res.get('error').get('message', '(no error provided)'), ANSI['RESET'])
         else:
-            print '{}OK{}'.format(ANSI['GREEN'], ANSI['RESET'])
+            print '{}OK {}{}'.format(ANSI['GREEN'], res, ANSI['RESET'])
 
         for fname in res.get('result', {}).get('files', []):
             print fname
