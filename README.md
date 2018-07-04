@@ -4,19 +4,24 @@ UrsaDB Client
 A command line client for `ursadb`. Usage:
 
 ```
-python ursaclient.py
+usage: ursaclient.py [-h] [--cmd [CMD]] [db_url]
+
+Communicate with UrsaDB.
+
+positional arguments:
+  db_url
+
+optional arguments:
+  -h, --help   show this help message and exit
+  --cmd [CMD]  execute provided command, print results and terminate
 ```
 
-or specify host/port explicitly:
-
-```
-python ursaclient.py tcp://localhost:9281
-```
 
 Full package installation
 -------------------------
 
-This repository is only for UrsaDB project (n-gram database). In order to see instructions on how to set up the whole mquery system, see [CERT-Polska/mquery](https://github.com/CERT-Polska/mquery).
+This repository is only for UrsaDB project (n-gram database). In order to see instructions on how to set up
+the whole mquery system, see [CERT-Polska/mquery](https://github.com/CERT-Polska/mquery).
 
 
 Querying database
