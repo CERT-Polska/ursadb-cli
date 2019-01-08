@@ -28,3 +28,15 @@ Querying database
 -----------------
 
 Query language is described in [CERT-Polska/ursadb](https://github.com/CERT-Polska/ursadb) repository.
+
+
+Exemplary applications
+----------------------
+
+### Indexing Cuckoo's dumps
+```
+URSADB_URL=tcp://localhost:9281
+CUCKOO_ANALYSES=storage/analyses
+find $(readlink -f "$CUCKOO_ANALYSES") -maxdepth 2 -type d -name dumps > /tmp/ursadb-list.txt
+python3 ursaclient.py --cmd 'index from list "/tmp/ursadb-list.txt";' $URSADB_URL
+```
