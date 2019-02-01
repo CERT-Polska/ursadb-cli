@@ -25,6 +25,7 @@ if not args.cmd:
     print("[ ] Connecting: {}".format(args.db_url))
 
 socket = context.socket(zmq.REQ)
+socket.setsockopt(zmq.LINGER, 0)
 socket.setsockopt(zmq.RCVTIMEO, 1000)
 socket.connect(args.db_url)
 
