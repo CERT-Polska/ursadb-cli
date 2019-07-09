@@ -2,7 +2,7 @@ import argparse
 import json
 import sys
 import zmq
-from terminal import setup_terminal
+from .terminal import setup_terminal
 from tabulate import tabulate
 
 setup_terminal()
@@ -87,7 +87,10 @@ def main():
         else:
             sys.stdout.write("> ")
             sys.stdout.flush()
-            query = sys.stdin.readline().strip()
+            query = sys.stdin.readline()
+            if not query:
+                break
+            query = query.strip()
 
         res = do_query(query)
 
