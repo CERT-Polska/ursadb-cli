@@ -2,57 +2,14 @@ import argparse
 import json
 import sys
 import zmq
-from .terminal import setup_terminal
+from terminal import setup_terminal
 from tabulate import tabulate
 
-setup_terminal()
 
 ANSI = {"RED": "\x1b[31m", "GREEN": "\x1b[32m", "RESET": "\x1b[39m"}
 
-parser = argparse.ArgumentParser(description="Communicate with UrsaDB.")
-parser.add_argument("db_url", nargs="?", default="tcp://localhost:9281")
-parser.add_argument(
-    "--cmd",
-    nargs="?",
-    help="execute provided command, print results and terminate",
-)
 
-args = parser.parse_args()
-
-context = zmq.Context()
-
-if not args.cmd:
-    print("[ ] Connecting: {}".format(args.db_url))
-
-socket = context.socket(zmq.REQ)
-socket.setsockopt(zmq.LINGER, 0)
-socket.setsockopt(zmq.RCVTIMEO, 1000)
-socket.connect(args.db_url)
-
-socket.send_string("ping;")
-
-while True:
-    try:
-        socket.recv()
-    except zmq.error.Again as e:
-        print(
-            "{}[!] Connection failed: {}{}".format(
-                ANSI["RED"], str(e), ANSI["RESET"]
-            )
-        )
-    else:
-        break
-
-
-progress_socket = context.socket(zmq.REQ)
-progress_socket.connect(args.db_url)
-
-
-if not args.cmd:
-    print("{}[+] Connected{}".format(ANSI["GREEN"], ANSI["RESET"]))
-
-
-def print_progress_bars():
+def print_progress_bars(progress_socket):
     progress_socket.send_string("status;")
     result = json.loads(progress_socket.recv())
     tasks = [
@@ -68,7 +25,7 @@ def print_progress_bars():
         print("task {:4} {:3.2f}% [{}]".format(task["id"], frac * 100, bar))
 
 
-def do_query(query):
+def do_query(query, socket, progress_socket):
     if not query.endswith(";"):
         query += ";"
     socket.send_string(query)
@@ -77,10 +34,52 @@ def do_query(query):
             res = json.loads(socket.recv())
             return res
         except Exception:
-            print_progress_bars()
+            print_progress_bars(progress_socket)
 
 
 def main():
+    setup_terminal()
+
+    parser = argparse.ArgumentParser(description="Communicate with UrsaDB.")
+    parser.add_argument("db_url", nargs="?", default="tcp://localhost:9281")
+    parser.add_argument(
+        "--cmd",
+        nargs="?",
+        help="execute provided command, print results and terminate",
+    )
+
+    args = parser.parse_args()
+
+    context = zmq.Context()
+
+    if not args.cmd:
+        print("[ ] Connecting: {}".format(args.db_url))
+
+    socket = context.socket(zmq.REQ)
+    socket.setsockopt(zmq.LINGER, 0)
+    socket.setsockopt(zmq.RCVTIMEO, 1000)
+    socket.connect(args.db_url)
+
+    socket.send_string("ping;")
+
+    while True:
+        try:
+            socket.recv()
+        except zmq.error.Again as e:
+            print(
+                "{}[!] Connection failed: {}{}".format(
+                    ANSI["RED"], str(e), ANSI["RESET"]
+                )
+            )
+        else:
+            break
+
+    progress_socket = context.socket(zmq.REQ)
+    progress_socket.connect(args.db_url)
+
+    if not args.cmd:
+        print("{}[+] Connected{}".format(ANSI["GREEN"], ANSI["RESET"]))
+
     while True:
         if args.cmd:
             query = args.cmd
@@ -92,7 +91,7 @@ def main():
                 break
             query = query.strip()
 
-        res = do_query(query)
+        res = do_query(query, socket, progress_socket)
 
         if "error" in res:
             print(
