@@ -10,12 +10,12 @@ class SimpleCompleter(object):
         if state == 0:
             # This is the first time for this text, so build a match list.
             if text:
-                self.matches = [s 
-                                for s in self.options
-                                if s and s.startswith(text)]
+                self.matches = [
+                    s for s in self.options if s and s.startswith(text)
+                ]
             else:
                 self.matches = self.options[:]
-        
+
         try:
             response = self.matches[state]
         except IndexError:
@@ -23,6 +23,16 @@ class SimpleCompleter(object):
         return response
 
 
-keywords = ["index ", "select ", "compact", "with ", "gram3", "text4", "hash4", "wide8"]
-readline.set_completer(SimpleCompleter(keywords).complete)
-readline.parse_and_bind('tab: complete')
+def setup_terminal():
+    keywords = [
+        "index ",
+        "select ",
+        "compact",
+        "with ",
+        "gram3",
+        "text4",
+        "hash4",
+        "wide8",
+    ]
+    readline.set_completer(SimpleCompleter(keywords).complete)
+    readline.parse_and_bind("tab: complete")
