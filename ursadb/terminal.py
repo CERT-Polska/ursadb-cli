@@ -26,6 +26,12 @@ class SimpleCompleter(object):
 def setup_terminal():
     keywords = [
         "index ",
+        "into ",
+        "dataset ",
+        "iterator ",
+        "taint ",
+        "taints ",
+        "untaint ",
         "select ",
         "compact",
         "with ",

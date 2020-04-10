@@ -86,10 +86,10 @@ def main():
         else:
             sys.stdout.write("> ")
             sys.stdout.flush()
-            query = sys.stdin.readline()
-            if not query:
-                break
-            query = query.strip()
+            query = input().strip()
+
+        if not query:
+            continue
 
         res = do_query(query, socket, progress_socket)
 
