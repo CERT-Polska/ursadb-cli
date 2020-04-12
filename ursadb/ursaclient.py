@@ -2,7 +2,7 @@ import argparse
 import json
 import sys
 import zmq
-from terminal import setup_terminal
+from ursadb.terminal import setup_terminal
 from tabulate import tabulate
 
 

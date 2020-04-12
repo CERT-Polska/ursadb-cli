@@ -5,4 +5,6 @@ RUN pip3 install --no-cache-dir -r /tmp/requirements.txt
 
 COPY . /app
 WORKDIR /app
-ENTRYPOINT ["/usr/local/bin/python3", "ursadb/ursaclient.py"]
+RUN pip3 install .
+
+ENTRYPOINT ["ursaclient"]
